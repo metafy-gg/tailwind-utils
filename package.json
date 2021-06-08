@@ -5,14 +5,14 @@
   "main": "src/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/metafy-gg/tailwind-class-sorter.git"
+    "url": "git+https://github.com/metafy-gg/prettier-plugin-tailwind-sort.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/metafy-gg/tailwind-class-sorter/issues"
+    "url": "https://github.com/metafy-gg/prettier-plugin-tailwind-sort/issues"
   },
-  "homepage": "https://github.com/metafy-gg/tailwind-class-sorter#readme",
+  "homepage": "https://github.com/metafy-gg/prettier-plugin-tailwind-sort#readme",
   "dependencies": {
     "prettier": "^2.3.1",
     "prettier-plugin-svelte": "^2.3.0",
