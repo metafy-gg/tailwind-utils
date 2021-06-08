@@ -1,0 +1,21 @@
+{
+  "name": "prettier-plugin-tailwind-sort",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/metafy-gg/tailwind-class-sorter.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/metafy-gg/tailwind-class-sorter/issues"
+  },
+  "homepage": "https://github.com/metafy-gg/tailwind-class-sorter#readme",
+  "dependencies": {
+    "prettier": "^2.3.1",
+    "prettier-plugin-svelte": "^2.3.0",
+    "svelte": "^3.38.2"
+  }
+}
