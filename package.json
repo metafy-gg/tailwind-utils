@@ -1,18 +1,18 @@
 {
-  "name": "prettier-plugin-tailwind-sort",
+  "name": "prettier-plugin-svelte-tailwind-sort",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/metafy-gg/prettier-plugin-tailwind-sort.git"
+    "url": "git+https://github.com/metafy-gg/prettier-plugin-svelte-tailwind-sort.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/metafy-gg/prettier-plugin-tailwind-sort/issues"
+    "url": "https://github.com/metafy-gg/prettier-plugin-svelte-tailwind-sort/issues"
   },
-  "homepage": "https://github.com/metafy-gg/prettier-plugin-tailwind-sort#readme",
+  "homepage": "https://github.com/metafy-gg/prettier-plugin-svelte-tailwind-sort#readme",
   "dependencies": {
     "prettier": "^2.3.1",
     "prettier-plugin-svelte": "^2.3.0",

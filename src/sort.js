@@ -1,9 +1,10 @@
 const breakpoints = ['2xl', 'xl', 'lg', 'md', 'sm'];
 
 // Match helpers
-const m = {
+let m = {
   any: '[0-9a-z./]+',
 };
+m.color = `${m.any}-${m.any}`;
 
 let classOrder = [
   // Utils
@@ -40,20 +41,22 @@ let classOrder = [
   // Text
   `uppercase`,
   `font-${m.any}`,
-  // TODO: There should be a distinction between text sizes and text colors.
   `text-${m.any}`,
+  `text-${m.color}`,
   `tracking-${m.any}`,
   `leading-${m.any}`,
 
   // Background
   `bg-${m.any}`,
+  `bg-${m.color}`,
   `bg-opacity-${m.any}`,
 
   // Border
   `border`,
   `border-${m.any}`,
+  `border-${m.color}`,
   `border-[tblr]-${m.any}`,
-  // TODO: border-tr, border-tl, etc
+  `border-(tl)|(tr)|(bl)|(br)-${m.any}`,
   `border-opacity-${m.any}`,
   `rounded-${m.any}`,
 
@@ -87,7 +90,7 @@ for (let i = 0; i < classOrder.length; i++) {
 
 function sortClasses(classes) {
   // Remove unwanted spaces while we're at it:
-  classes = classes.replace(/\s+/g, ' ');
+  classes = classes.replace(/\s+/g, ' ').trim();
   return classes
     .split(' ')
     .sort((a, b) => {
