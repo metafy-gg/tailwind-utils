@@ -52,7 +52,7 @@ let classOrder = [
   `invisible`,
 
   // Z-Index
-  `z-${m.any}`,
+  `-?z-${m.any}`,
 
   // Pointer Events
   `pointer-events-${m.any}`,
@@ -134,10 +134,10 @@ let classOrder = [
   `-?inset-${m.any}`,
   `-?inset-x-${m.any}`,
   `-?inset-y-${m.any}`,
-  `-?top-${m.any}`,
-  `-?bottom-${m.any}`,
   `-?left-${m.any}`,
   `-?right-${m.any}`,
+  `-?top-${m.any}`,
+  `-?bottom-${m.any}`,
 
   // Size
   `w-${m.any}`,
@@ -180,7 +180,7 @@ let classOrder = [
   // Text Opacity
   `text-opacity-${m.any}`,
   // Letter Spacing
-  `tracking-${m.any}`,
+  `-?tracking-${m.any}`,
   // Line Height
   `leading-${m.any}`,
 
@@ -205,8 +205,11 @@ let classOrder = [
   `bg-opacity-${m.any}`,
   // Background Image
   `bg-gradient-${m.any}`,
+  `from-${m.any}`,
   `from-${m.color}`,
+  `via-${m.any}`,
   `via-${m.color}`,
+  `to-${m.any}`,
   `to-${m.color}`,
 
   // Opacity
@@ -230,7 +233,10 @@ let classOrder = [
   `border-b-${m.any}`,
   `border-l-${m.any}`,
   `border-r-${m.any}`,
-  `border-(tl)|(tr)|(bl)|(br)-${m.any}`,
+  `border-tl-${m.any}`,
+  `border-tr-${m.any}`,
+  `border-bl-${m.any}`,
+  `border-br-${m.any}`,
   `border-opacity-${m.any}`,
   // Border Radius
   `rounded`,
@@ -303,10 +309,10 @@ for (let i = 0; i < classOrder.length; i++) {
     classOrder.splice(
       i + 1,
       0,
-      new RegExp('^' + bp + ':' + classOrder[i].source + '$')
+      new RegExp('^' + bp + ':' + '(hover:)?' + classOrder[i].source + '$')
     )
   );
-  classOrder[i] = new RegExp('^' + classOrder[i].source + '$');
+  classOrder[i] = new RegExp('^' + '(hover:)?' + classOrder[i].source + '$');
   i += breakpoints.length;
 }
 
@@ -319,9 +325,17 @@ function sort(classes) {
   const sorted = classes
     .split(' ')
     .sort((a, b) => {
+      //// Debug:
+      // console.log('a, b:', a, b);
+      // console.log(
+      //   'ma, mb:',
+      //   classOrder?.[findIndexReverse(classOrder, (re) => a.match(re))],
+      //   classOrder?.[findIndexReverse(classOrder, (re) => b.match(re))],
+      // );
+      // console.log('\n');
       return (
-        classOrder.findIndex((re) => a.match(re)) -
-        classOrder.findIndex((re) => b.match(re))
+        findIndexReverse(classOrder, (re) => a.match(re)) -
+        findIndexReverse(classOrder, (re) => b.match(re))
       );
     })
     .join(' ')
@@ -329,6 +343,15 @@ function sort(classes) {
 
   // Make sure leading or trailing spaces are preserved.
   return `${leadingSpace ? ' ' : ''}${sorted}${trailingSpace ? ' ' : ''}`;
+}
+
+function findIndexReverse(arr, predicate) {
+  for (let i = arr.length - 1; i >= 0; i--) {
+    if (predicate(arr[i])) {
+      return i;
+    }
+  }
+  return -1;
 }
 
 module.exports = sort;
