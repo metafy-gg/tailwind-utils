@@ -129,9 +129,10 @@ for (let i = 0; i < classOrder.length; i++) {
   i += breakpoints.length;
 }
 
-function sortClasses(classes) {
-  // Remove unwanted spaces while we're at it:
-  classes = classes.replace(/\s+/g, ' ').trim();
+function sort(classes) {
+  // Remove unwanted spaces:
+  classes = classes.replace(/\s+/g, ' ');
+  
   return classes
     .split(' ')
     .sort((a, b) => {
@@ -143,4 +144,4 @@ function sortClasses(classes) {
     .join(' ');
 }
 
-module.exports = sortClasses;
+module.exports = sort;
