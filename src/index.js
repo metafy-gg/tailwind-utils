@@ -2,7 +2,7 @@ const breakpoints = ['2xl', 'xl', 'lg', 'md', 'sm'];
 
 // Match helpers
 let m = {
-  any: '[0-9a-z./-]+',
+  any: '[0-9a-z./-\\[\\]]+',
 };
 m.color = `${m.any}-${m.any}`;
 
@@ -16,6 +16,9 @@ let classOrder = [
   `absolute`,
   `relative`,
   `sticky`,
+
+  // Z-Index
+  `-?z-${m.any}`,
 
   // Box Sizing
   `box-${m.any}`,
@@ -50,9 +53,6 @@ let classOrder = [
   // Visibility
   `visible`,
   `invisible`,
-
-  // Z-Index
-  `-?z-${m.any}`,
 
   // Pointer Events
   `pointer-events-${m.any}`,
