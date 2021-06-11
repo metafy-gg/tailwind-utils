@@ -1,40 +1,3 @@
-// const {
-//   languages,
-//   parsers,
-//   printers,
-//   options,
-// } = require('prettier-plugin-svelte');
-// const sortClasses = require('./sort');
-
-// function print(path, options, print) {
-//   const node = path.getValue();
-//   if (!node) {
-//     return '';
-//   }
-
-//   let doc = printers['svelte-ast'].print(path, options, print);
-
-//   if (node.type === 'Attribute' && node.name === 'class') {
-//     const sorted = sortClasses(node.value[0].data);
-//     doc.parts.find((p) => p.type === 'concat').parts[0] = sorted;
-//     return doc;
-//   }
-
-//   return doc;
-// }
-
-// module.exports = {
-//   languages,
-//   parsers,
-//   printers: {
-//     'svelte-ast': {
-//       ...printers['svelte-ast'],
-//       print,
-//     },
-//   },
-//   options,
-// };
-
 const breakpoints = ['2xl', 'xl', 'lg', 'md', 'sm'];
 
 // Match helpers
@@ -130,10 +93,12 @@ for (let i = 0; i < classOrder.length; i++) {
 }
 
 function sort(classes) {
-  // Remove unwanted spaces:
+  // Remove unwanted repeated spaces:
   classes = classes.replace(/\s+/g, ' ');
-  
-  return classes
+  const leadingSpace = classes[0] === ' ';
+  const trailingSpace = classes[classes.length - 1] === ' ';
+
+  const sorted = classes
     .split(' ')
     .sort((a, b) => {
       return (
@@ -141,7 +106,11 @@ function sort(classes) {
         classOrder.findIndex((re) => b.match(re))
       );
     })
-    .join(' ');
+    .join(' ')
+    .trim();
+
+  // Make sure leading or trailing spaces are preserved.
+  return `${leadingSpace ? ' ' : ''}${sorted}${trailingSpace ? ' ' : ''}`;
 }
 
 module.exports = sort;
