@@ -271,6 +271,8 @@ let classOrder = [
 
   // Transition Property
   `transition${m.any}`,
+  `duration-${m.any}`,
+  `ease-${m.any}`,
   // Animation
   `animate-${m.any}`,
 
@@ -296,10 +298,10 @@ let classOrder = [
   `-?m-${m.any}`,
   `-?mx-${m.any}`,
   `-?my-${m.any}`,
-  `-?mt-[${m.any}`,
-  `-?mb-[${m.any}`,
-  `-?ml-[${m.any}`,
-  `-?mr-[${m.any}`,
+  `-?mt-${m.any}`,
+  `-?mb-${m.any}`,
+  `-?ml-${m.any}`,
+  `-?mr-${m.any}`,
 ].map((rule) => new RegExp(rule));
 
 // Append each responsive variant after every entry.
