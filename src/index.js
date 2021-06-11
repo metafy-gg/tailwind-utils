@@ -275,13 +275,13 @@ let classOrder = [
   `animate-${m.any}`,
 
   // Padding
-  `p-${m.any}`,
-  `px-${m.any}`,
-  `py-${m.any}`,
-  `pt-${m.any}`,
-  `pb-${m.any}`,
-  `pl-${m.any}`,
-  `pr-${m.any}`,
+  `-?p-${m.any}`,
+  `-?px-${m.any}`,
+  `-?py-${m.any}`,
+  `-?pt-${m.any}`,
+  `-?pb-${m.any}`,
+  `-?pl-${m.any}`,
+  `-?pr-${m.any}`,
 
   // Spacing
   `-?space-x-${m.any}`,
