@@ -1,8 +1,11 @@
 {
-  "name": "tailwind-sort",
+  "name": "tailwind-utils",
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
+  "scripts": {
+    "test": "uvu -r esm test"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/metafy-gg/tailwind-sort.git"
@@ -13,5 +16,12 @@
     "url": "https://github.com/metafy-gg/tailwind-sort/issues"
   },
   "homepage": "https://github.com/metafy-gg/tailwind-sort#readme",
-  "dependencies": {}
+  "devDependencies": {
+    "esm": "^3.2.25",
+    "uvu": "^0.5.1"
+  },
+  "dependencies": {
+    "lodash": "^4.17.21",
+    "tailwindcss": "^2.1.4"
+  }
 }
