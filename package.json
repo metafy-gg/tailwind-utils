@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/metafy-gg/tailwind-sort.git"
+    "url": "git+https://github.com/metafy-gg/tailwind-utils.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/metafy-gg/tailwind-sort/issues"
+    "url": "https://github.com/metafy-gg/tailwind-utils/issues"
   },
-  "homepage": "https://github.com/metafy-gg/tailwind-sort#readme",
+  "homepage": "https://github.com/metafy-gg/tailwind-utils#readme",
   "devDependencies": {
     "esm": "^3.2.25",
     "uvu": "^0.5.1"
