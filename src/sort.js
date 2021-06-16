@@ -1,4 +1,5 @@
 import { loadPlugin } from './plugins.js';
+import config from './config.js';
 
 // TODO: Read from config
 const breakpoints = ['sm', 'md', 'lg', 'xl', '2xl'];
@@ -210,24 +211,28 @@ export let order = [
   'margin',
 ];
 
-let byClassname = {};
+export function loadConfig(path) {
+  const cfg = config.load(path);
 
-// Load all plugins in the order defined by `order`.
-let i = 0;
-order
-  .filter((p) => !['preflight', 'container'].includes(p))
-  .forEach((plugin) => {
-    loadPlugin(plugin, (classname, _) => {
-      byClassname[classname] = i;
-      i++;
-      breakpoints.forEach((bp) => {
-        byClassname[`${bp}:${classname}`] = i;
+  // Load all plugins in the order defined by `order`.
+  let byClassname = {};
+  let i = 0;
+  order
+    .filter((p) => !['preflight', 'container'].includes(p))
+    .forEach((plugin) => {
+      loadPlugin(cfg, plugin, (classname, _) => {
+        byClassname[classname] = i;
         i++;
+        breakpoints.forEach((bp) => {
+          byClassname[`${bp}:${classname}`] = i;
+          i++;
+        });
       });
     });
-  });
+  return byClassname;
+}
 
-export function sortClasses(classnames) {
+export function sortClasses(classnames, byClassname) {
   // Remove unwanted repeated spaces:
   classnames = classnames.replace(/\s+/g, ' ');
   const leadingSpace = classnames[0] === ' ';
@@ -235,14 +240,10 @@ export function sortClasses(classnames) {
 
   const sorted = classnames
     .split(' ')
-    .sort((a, b) => classPosition(a) - classPosition(b))
+    .sort((a, b) => byClassname[a] - byClassname[b])
     .join(' ')
     .trim();
 
   // Make sure leading or trailing spaces are preserved.
   return `${leadingSpace ? ' ' : ''}${sorted}${trailingSpace ? ' ' : ''}`;
-}
-
-function classPosition(classname) {
-  return byClassname[classname];
 }

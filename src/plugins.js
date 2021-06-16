@@ -1,12 +1,8 @@
-import get from 'lodash/get';
-import kebabCase from 'lodash/kebabCase';
-import toPath from 'lodash/toPath';
+import { get, toPath, kebabCase } from 'lodash';
 import * as plugins from 'tailwindcss/lib/plugins';
 import transformThemeValue from 'tailwindcss/lib/util/transformThemeValue';
 
-import { config } from './config.js';
-
-export function loadPlugin(name, load) {
+export function loadPlugin(cfg, name, load) {
   if (!(name in plugins)) {
     throw new Error(`plugin '${name}' doesn't exist`);
   }
@@ -27,11 +23,11 @@ export function loadPlugin(name, load) {
       }
       loadPluginRules(source, load);
     },
-    theme,
+    theme: themeForConfig(cfg),
     variants,
     corePlugins: () => true,
     prefix: (s) => '--tw' + s,
-    config: (key) => get(config, key),
+    config: (key) => get(cfg, key),
   });
 }
 
@@ -43,28 +39,37 @@ function loadPluginRules(twrules, load) {
     if (spaceIdx !== -1) {
       classname = classname.slice(0, spaceIdx);
     }
+
     // Convert camelCase rules into kebab-case.
     for (const key in properties) {
+      // Don't convert variable names like `--tw-bg-opacity`
+      if (key.startsWith('--tw-')) {
+        continue;
+      }
+
       const kebab = kebabCase(key);
       if (!(kebab in properties)) {
         properties[kebab] = properties[key];
         delete properties[key];
       }
     }
+
     load(classname.slice(1), properties);
   });
 }
 
-function theme(path, defaultValue) {
-  const [pathRoot, ...subPaths] = toPath(path);
-  const value = getConfigValue(['theme', pathRoot, ...subPaths], defaultValue);
+function themeForConfig(cfg) {
+  return function (path, defaultValue) {
+    const [pathRoot, ...subPaths] = toPath(path);
+    const value = getConfigValue(cfg, ['theme', pathRoot, ...subPaths], defaultValue);
 
-  const transformedValue = transformThemeValue(pathRoot)(value);
-  return transformedValue;
+    const transformedValue = transformThemeValue(pathRoot)(value);
+    return transformedValue;
+  };
 }
 
 function variants() {}
 
-function getConfigValue(path, defaultValue) {
-  return path ? get(config, path, defaultValue) : config;
+function getConfigValue(cfg, path, defaultValue) {
+  return path ? get(cfg, path, defaultValue) : cfg;
 }
