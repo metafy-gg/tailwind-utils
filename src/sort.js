@@ -1,11 +1,5 @@
-import { loadPlugin } from './plugins.js';
-import config from './config.js';
-
-// TODO: Read from config
-const breakpoints = ['sm', 'md', 'lg', 'xl', '2xl'];
-
 // TODO: variants
-const variants = ['hover'].map((v) => `(${v}:)?`).join('');
+export const variants = ['hover'].map((v) => `(${v}:)?`).join('');
 
 export let order = [
   // Utils
@@ -211,27 +205,8 @@ export let order = [
   'margin',
 ];
 
-export function loadConfig(path) {
-  const cfg = config.load(path);
-
-  // Load all plugins in the order defined by `order`.
-  let byClassname = {};
-  let i = 0;
-  order
-    .filter((p) => !['preflight', 'container'].includes(p))
-    .forEach((plugin) => {
-      loadPlugin(cfg, plugin, (classname, _) => {
-        byClassname[classname] = i;
-        i++;
-        breakpoints.forEach((bp) => {
-          byClassname[`${bp}:${classname}`] = i;
-          i++;
-        });
-      });
-    });
-  return byClassname;
-}
-
+// TODO: Add an option to disable inserting breakpoints.
+// TODO: Add an option to get sort order by using an array instead of a hashmap (sacrificing execution time for file size)? Maybe not worth it actually
 export function sortClasses(classnames, byClassname) {
   // Remove unwanted repeated spaces:
   classnames = classnames.replace(/\s+/g, ' ');

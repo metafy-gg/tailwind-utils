@@ -1,14 +1,15 @@
-import { suite } from 'uvu';
+import { test } from 'uvu';
 import * as assert from 'uvu/assert';
 
-import { loadConfig } from '../src/translate.js';
-import { propertiesToClass } from '../src/translate-slim.js';
+import config from '../src/config';
+import { classnameByProperties } from '../src/plugins.js';
+import { propertiesToClass } from '../src/translate.js';
 
-const s = suite('propertiesToClass');
-s('all', () => {
-  const byProperties = loadConfig('../tailwind.config.js');
-  const toClass = (properties) => propertiesToClass(properties, byProperties);
+const cfg = config.load('../tailwind.config.js');
+const byProperties = classnameByProperties(cfg);
+const toClass = (properties) => propertiesToClass(properties, byProperties);
 
+test('all', () => {
   assert.equal(toClass('position: static'), 'static');
   assert.equal(toClass('display: inline-block'), 'inline-block');
   assert.equal(toClass('display: none'), 'hidden');
@@ -37,8 +38,18 @@ s('all', () => {
   assert.equal(toClass('background-color: #262A33'), 'bg-neutrals-d80');
   assert.equal(toClass('background: #262A33'), 'bg-neutrals-d80');
   assert.equal(toClass('color: #262A33'), 'text-neutrals-d80');
-  assert.equal(toClass('width: 297px'), 'w-[297px]');
   assert.equal(toClass('width: 16px'), 'w-4');
+  assert.equal(toClass('width: 72px'), 'w-18');
+  assert.equal(toClass('height: 72px'), 'h-18');
+  assert.equal(toClass('border: 1px solid rgba(121, 134, 148, 0.65)'), 'border border-neutrals-l40 border-opacity-65');
+  assert.equal(toClass('border: 1px solid rgba(121, 134, 148, 1)'), 'border border-neutrals-l40 border-opacity-100');
+  assert.equal(toClass('margin-top: 8px; margin-left: 12px'), 'mt-2 ml-3');
+  assert.equal(toClass('background: url("")'), undefined);
+  assert.equal(toClass('background-color: rgba(121, 134, 148, 0.65)'), 'bg-neutrals-l40 bg-opacity-65');
   // assert.equal(toClass(''), '');
 });
-s.run();
+// TODO: Better tests
+test('jit', () => {
+  assert.equal(toClass('width: 297px'), 'w-[297px]');
+})
+test.run();

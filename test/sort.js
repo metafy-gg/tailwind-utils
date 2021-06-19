@@ -1,11 +1,14 @@
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 
-import { loadConfig, sortClasses } from '../src/sort.js';
+import config from '../src/config';
+import { orderByClassname } from '../src/plugins.js';
+import { sortClasses } from '../src/sort.js';
 
 const s = suite('sort');
 s('sorts', () => {
-  const byClassname = loadConfig('../tailwind.config.js');
+  const cfg = config.load('../tailwind.config.js');
+  const byClassname = orderByClassname(cfg);
   const sort = (classnames) => sortClasses(classnames, byClassname);
 
   assert.equal(sort('mt-4 relative'), 'relative mt-4');
