@@ -1,14 +1,25 @@
 const defaults = {
   'border-style': 'solid',
   'font-style': 'not-italic',
+  'box-sizing': 'box-border',
   '--tw-bg-opacity': '1',
   '--tw-border-opacity': '1',
   '--tw-text-opacity': '1',
 };
+// List of properties for which we'll try to snap to nearest.
+const snapToNearest = ['--tw-border-opacity', '--tw-bg-opacity'];
 
-// TODO: Option: Tailwind 2.2 opacity shorthand
 // TODO: Option: snap to nearest
-export function propertiesToClass(props, byProperties, options = { omitDefaults: true, opacityShorthand: true }) {
+export function propertiesToClass(
+  props,
+  byProperties,
+  options = { omitDefaults: true, opacityShorthand: true, snapToNearest: true }
+) {
+  const lookup = (...properties) => {
+    // TODO: Snap this to nearest too?
+    return byProperties[concatProperties(...properties)];
+  };
+
   let properties = Object.fromEntries(
     props.split(';').map((s) => {
       const [name, value] = s
@@ -20,7 +31,7 @@ export function propertiesToClass(props, byProperties, options = { omitDefaults:
   );
 
   let classnames = [];
-
+  let toLookup = { ...properties };
   for (let [name, value] of Object.entries(properties)) {
     // Rename semi-equivalent property names.
     name = rename(name);
@@ -34,19 +45,19 @@ export function propertiesToClass(props, byProperties, options = { omitDefaults:
     }
 
     // Otherwise, mark converted property for lookup
-    properties[name] = value;
+    toLookup[name] = value;
   }
 
   // Iterate over all possible combinations (power set) of properties.
   // First we try to lookup all three
   let skipUnderLength;
-  for (const subprops of subsets(Object.entries(properties))) {
+  for (const subprops of subsets(Object.entries(toLookup))) {
     if (subprops.length === 0 || (skipUnderLength && subprops.length < skipUnderLength)) {
       break;
     }
 
     const [[name]] = subprops;
-    const found = byProperties[concatProperties(subprops)];
+    const found = lookup(subprops);
     if (found && (!options.omitDefaults || defaults[name] !== found)) {
       classnames.push(found);
       skipUnderLength = subprops.length;
@@ -59,7 +70,7 @@ export function propertiesToClass(props, byProperties, options = { omitDefaults:
       if (!jit) {
         continue;
       }
-      const zero = byProperties[concatProperties([[name, '0px']])];
+      const zero = lookup([[name, '0px']]);
       if (!zero) {
         continue;
       }
@@ -157,7 +168,30 @@ function hexToRgb(hex) {
  */
 function decompose(name, value, properties, classnames, byProperties, options) {
   const lookup = (...properties) => {
-    return byProperties[concatProperties(...properties)];
+    const f = byProperties[concatProperties(...properties)];
+    if (f) {
+      return f;
+    }
+
+    for (const prop of properties) {
+      for (const [name, value] of prop) {
+        if (!snapToNearest.includes(name)) {
+          continue;
+        }
+        // TODO: Only works for decimal numbers
+        let v = parseFloat(value);
+
+        const distance = 3;
+        for (let i = v - distance / 100; i < v + distance / 100; i += 0.01) {
+          const sf =
+            byProperties[concatProperties(...properties.filter(([[n]]) => n !== name), [[name, i.toFixed(2)]])];
+          if (sf) {
+            return sf;
+          }
+        }
+      }
+    }
+    return;
   };
   // Finds classname and inserts it directly, without needing to compose it out of multiple properties.
   const pushClassname = (...properties) => {

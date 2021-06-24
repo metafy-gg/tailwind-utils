@@ -92,6 +92,7 @@ test('multiple', () => {
 });
 test('omit defaults', () => {
   const opts = { omitDefaults: false };
+  assert.equal(toClass('box-sizing: border-box'), undefined);
   assert.equal(toClass('font-style: normal'), undefined);
   assert.equal(toClass('font-style: normal', opts), 'not-italic');
   assert.equal(toClass('border: 1px solid rgba(121, 134, 148, 1)', opts), 'border border-solid border-neutrals-l40 border-opacity-100');
@@ -107,9 +108,10 @@ test('opacity shorthand', () => {
   assert.equal(toClass('background: url("")'), undefined);
   assert.equal(toClass('color: rgba(121, 134, 148, 0.65)'), 'text-neutrals-l40/65');
 });
-// test('snap to nearest', () => {
-//   assert.equal(toClass('border: 1px solid rgba(121, 134, 148, 0.66)'), 'border border-neutrals-l40 border-opacity-65');
-// });
+test('snap to nearest', () => {
+  assert.equal(toClass('border: 1px solid rgba(121, 134, 148, 0.66)'), 'border border-neutrals-l40/65');
+  assert.equal(toClass('background: rgba(125, 193, 244, 0.16)'), 'bg-functional-b10/15');
+});
 test('jit', () => {
   assert.equal(toClass('width: 297px'), 'w-[18.5625rem]');
 });
