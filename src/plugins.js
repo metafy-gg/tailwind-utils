@@ -14,7 +14,7 @@ export function propertiesByClassname(cfg) {
     .filter((p) => !ignorePlugins.includes(p))
     .forEach((plugin) => {
       loadPlugin(cfg, plugin, (classname, properties) => {
-        byClassname[classname] = concatProperties(Object.entries(properties).map(([name, value]) => ({ name, value })));
+        byClassname[classname] = concatProperties(Object.entries(properties));
       });
     });
   return byClassname;
@@ -44,7 +44,7 @@ export function orderByClassname(cfg) {
 // Load all corePlugins into a map where the key is an alphabetically sorted concatenation of the plugin's properties.
 export function classnameByProperties(cfg) {
   // Ignore zero negative margin classes, translate to the regular margin classes instead.
-  const ignoreClassnames = ['-m-0', '-mx-0', '-my-0', '-mt-0', '-mb-0', '-ml-0', '-mr-0'];
+  const ignoreClassnames = ['-m-0', '-mx-0', '-my-0', '-mt-0', '-mb-0', '-ml-0', '-mr-0', '-inset-0'];
 
   let byProperties = {};
   cfg.corePlugins
@@ -54,7 +54,7 @@ export function classnameByProperties(cfg) {
         if (ignoreClassnames.includes(classname)) {
           return;
         }
-        const catted = concatProperties(Object.entries(properties).map(([name, value]) => ({ name, value })));
+        const catted = concatProperties(Object.entries(properties));
         byProperties[catted] = classname;
       });
     });
