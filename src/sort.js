@@ -206,7 +206,6 @@ export let order = [
 ];
 
 // TODO: Add an option to disable inserting breakpoints.
-// TODO: Add an option to get sort order by using an array instead of a hashmap (sacrificing execution time for file size)? Maybe not worth it actually
 export function sortClasses(classnames, byClassname) {
   // Remove unwanted repeated spaces:
   classnames = classnames.replace(/\s+/g, ' ');

@@ -9,7 +9,6 @@ const defaults = {
 // List of properties for which we'll try to snap to nearest.
 const snapToNearest = ['--tw-border-opacity', '--tw-bg-opacity'];
 
-// TODO: Option: snap to nearest
 export function propertiesToClass(
   props,
   byProperties,
