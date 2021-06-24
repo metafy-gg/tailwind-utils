@@ -156,9 +156,12 @@ function hexToRgb(hex) {
  * @returns {boolean} If anything was decomposed or not.
  */
 function decompose(name, value, properties, classnames, byProperties, options) {
+  const lookup = (...properties) => {
+    return byProperties[concatProperties(...properties)];
+  };
   // Finds classname and inserts it directly, without needing to compose it out of multiple properties.
   const pushClassname = (...properties) => {
-    const found = byProperties[concatProperties(properties)];
+    const found = lookup(properties);
     if (found) {
       classnames.push(found);
     }
@@ -168,21 +171,62 @@ function decompose(name, value, properties, classnames, byProperties, options) {
     if (!value.match(rgbaRe)) {
       return false;
     }
-    pushClassname(['--tw-text-opacity', '1'], ['color', `rgba(${rgbOnly(value)}, var(--tw-text-opacity))`]);
+
     const opacity = alphaOnly(value);
-    if (!options.omitDefaults || opacity !== defaults['--tw-text-opacity']) {
-      pushClassname(['--tw-text-opacity', opacity]);
+
+    if (options.opacityShorthand) {
+      // Look up color class manually, but don't add it yet. Afterwards we check to see if we can find the opacity value and if so we push the joined classes, like `${color}/${opacity}`
+      // Text color
+      let colorClassname = lookup([
+        ['--tw-text-opacity', '1'],
+        ['color', `rgba(${rgbOnly(value)}, var(--tw-text-opacity))`],
+      ]);
+      // Text opacity
+      const found = lookup([['--tw-text-opacity', opacity]]);
+      if (found && (!options.omitDefaults || opacity !== defaults['--tw-text-opacity'])) {
+        const opacityValue = found.slice(found.lastIndexOf('-') + 1, found.length);
+        colorClassname += '/' + opacityValue;
+      }
+      classnames.push(colorClassname);
+    } else {
+      // Text color
+      pushClassname(['--tw-text-opacity', '1'], ['color', `rgba(${rgbOnly(value)}, var(--tw-text-opacity))`]);
+      // Text opacity
+      if (!options.omitDefaults || opacity !== defaults['--tw-text-opacity']) {
+        pushClassname(['--tw-text-opacity', opacity]);
+      }
     }
+
     return true;
   }
   if (name === 'background-color') {
     if (!value.match(rgbaRe)) {
       return false;
     }
-    pushClassname(['--tw-bg-opacity', '1'], ['background-color', `rgba(${rgbOnly(value)}, var(--tw-bg-opacity))`]);
+
     const opacity = alphaOnly(value);
-    if (!options.omitDefaults || opacity !== defaults['--tw-bg-opacity']) {
-      pushClassname(['--tw-bg-opacity', opacity]);
+
+    if (options.opacityShorthand) {
+      // Look up color class manually, but don't add it yet. Afterwards we check to see if we can find the opacity value and if so we push the joined classes, like `${color}/${opacity}`
+      // Background color
+      let colorClassname = lookup([
+        ['--tw-bg-opacity', '1'],
+        ['background-color', `rgba(${rgbOnly(value)}, var(--tw-bg-opacity))`],
+      ]);
+      // Background opacity
+      const found = lookup([['--tw-bg-opacity', opacity]]);
+      if (found && (!options.omitDefaults || opacity !== defaults['--tw-bg-opacity'])) {
+        const opacityValue = found.slice(found.lastIndexOf('-') + 1, found.length);
+        colorClassname += '/' + opacityValue;
+      }
+      classnames.push(colorClassname);
+    } else {
+      // Background color
+      pushClassname(['--tw-bg-opacity', '1'], ['background-color', `rgba(${rgbOnly(value)}, var(--tw-bg-opacity))`]);
+      // Background opacity
+      if (!options.omitDefaults || opacity !== defaults['--tw-bg-opacity']) {
+        pushClassname(['--tw-bg-opacity', opacity]);
+      }
     }
     return true;
   }
@@ -198,19 +242,38 @@ function decompose(name, value, properties, classnames, byProperties, options) {
     delete properties['border'];
     // Border width
     pushClassname(['border-width', borderWidth]);
+
+    const opacity = alphaOnly(borderColor);
+
     // Border style
     if (!options.omitDefaults || borderStyle !== defaults['border-style']) {
       pushClassname(['border-style', borderStyle]);
     }
-    // Border color
-    pushClassname(
-      ['--tw-border-opacity', '1'],
-      ['border-color', `rgba(${rgbOnly(borderColor)}, var(--tw-border-opacity))`]
-    );
-    // Border opacity
-    const opacity = alphaOnly(borderColor);
-    if (!options.omitDefaults || opacity !== defaults['--tw-border-opacity']) {
-      pushClassname(['--tw-border-opacity', opacity]);
+
+    if (options.opacityShorthand) {
+      // Look up color class manually, but don't add it yet. Afterwards we check to see if we can find the opacity value and if so we push the joined classes, like `${color}/${opacity}`
+      // Border color
+      let colorClassname = lookup([
+        ['--tw-border-opacity', '1'],
+        ['border-color', `rgba(${rgbOnly(borderColor)}, var(--tw-border-opacity))`],
+      ]);
+      // Border opacity
+      const found = lookup([['--tw-border-opacity', opacity]]);
+      if (found && (!options.omitDefaults || opacity !== defaults['--tw-border-opacity'])) {
+        const opacityValue = found.slice(found.lastIndexOf('-') + 1, found.length);
+        colorClassname += '/' + opacityValue;
+      }
+      classnames.push(colorClassname);
+    } else {
+      // Border color
+      pushClassname(
+        ['--tw-border-opacity', '1'],
+        ['border-color', `rgba(${rgbOnly(borderColor)}, var(--tw-border-opacity))`]
+      );
+      // Border opacity
+      if (!options.omitDefaults || opacity !== defaults['--tw-border-opacity']) {
+        pushClassname(['--tw-border-opacity', opacity]);
+      }
     }
     return true;
   }

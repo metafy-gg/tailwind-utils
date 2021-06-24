@@ -91,10 +91,11 @@ test('multiple', () => {
   assert.equal(toClass('margin-top: 8px; margin-left: 12px'), 'mt-2 ml-3');
 });
 test('omit defaults', () => {
+  const opts = { omitDefaults: false };
   assert.equal(toClass('font-style: normal'), undefined);
-  assert.equal(toClass('font-style: normal', { omitDefaults: false }), 'not-italic');
-  assert.equal(toClass('border: 1px solid rgba(121, 134, 148, 1)', { omitDefaults: false }), 'border border-solid border-neutrals-l40 border-opacity-100');
-  assert.equal(toClass('border: 1px solid #262A33', { omitDefaults: false }), 'border border-solid border-neutrals-d80 border-opacity-100');
+  assert.equal(toClass('font-style: normal', opts), 'not-italic');
+  assert.equal(toClass('border: 1px solid rgba(121, 134, 148, 1)', opts), 'border border-solid border-neutrals-l40 border-opacity-100');
+  assert.equal(toClass('border: 1px solid #262A33', opts), 'border border-solid border-neutrals-d80 border-opacity-100');
 });
 test('opacity shorthand', () => {
   assert.equal(toClass('border: 1px solid rgba(121, 134, 148, 0.65)'), 'border border-neutrals-l40/65');

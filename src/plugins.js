@@ -68,6 +68,7 @@ export function loadPlugin(cfg, name, load) {
   plugins[name]()({
     // Since Tailwind 2.2, dynamic rules are loaded using `matchUtilities`, and static rules are loaded using `addUtilities`.
     matchUtilities: (rules, { values }) => {
+      // TODO: animate
       if (rules.animate) {
         return;
       }
