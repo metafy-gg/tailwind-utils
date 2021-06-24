@@ -31,6 +31,6 @@
   },
   "dependencies": {
     "lodash": "^4.17.21",
-    "tailwindcss": "^2.1.4"
+    "tailwindcss": "^2.2.4"
   }
 }

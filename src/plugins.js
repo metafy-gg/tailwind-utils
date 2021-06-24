@@ -66,32 +66,57 @@ export function loadPlugin(cfg, name, load) {
     throw new Error(`plugin '${name}' doesn't exist`);
   }
   plugins[name]()({
-    addUtilities: (twrules) => {
-      let source = twrules;
-      if (Array.isArray(twrules)) {
-        if (twrules.length > 1) {
-          source = twrules.reduce((acc, v) => {
+    // Since Tailwind 2.2, dynamic rules are loaded using `matchUtilities`, and static rules are loaded using `addUtilities`.
+    matchUtilities: (rules, { values }) => {
+      if (rules.animate) {
+        return;
+      }
+
+      let calculatedRules = {};
+      for (const [prefix, matcher] of Object.entries(rules)) {
+        for (const [suffix, amount] of Object.entries(values)) {
+          const neg = suffix.startsWith('-');
+          let classname = `.${neg ? '-' : ''}${prefix}`;
+          if (!neg && suffix !== 'DEFAULT') {
+            classname += '-';
+          }
+          if (suffix !== 'DEFAULT') {
+            classname += suffix;
+          }
+          classname = classname.replace('/', '\\/');
+          const properties = matcher(amount);
+          calculatedRules[classname] = properties;
+        }
+      }
+      loadPluginRules(calculatedRules, load);
+    },
+    addUtilities: (rules) => {
+      let source = rules;
+      if (Array.isArray(rules)) {
+        if (rules.length > 1) {
+          source = rules.reduce((acc, v) => {
             for (const [key, val] of Object.entries(v)) {
               acc[key] = val;
             }
             return acc;
           }, {});
-        } else if (twrules.length === 1) {
-          source = twrules[0];
+        } else if (rules.length === 1) {
+          source = rules[0];
         }
       }
       loadPluginRules(source, load);
     },
     theme: themeForConfig(cfg),
     variants: () => {},
+    addBase: () => {},
     corePlugins: () => true,
     prefix: (s) => '--tw' + s,
     config: (key) => get(cfg, key),
   });
 }
 
-function loadPluginRules(twrules, load) {
-  Object.entries(twrules).forEach(([classname, properties]) => {
+function loadPluginRules(rules, load) {
+  Object.entries(rules).forEach(([classname, properties]) => {
     // `space-{}` classnames contain the full CSS selector, which is like `.space-y-150 > :not([hidden]) ~ :not([hidden])`
     // but we only want the first part, so copy everything until the first space.
     let spaceIdx = classname.indexOf(' ');
