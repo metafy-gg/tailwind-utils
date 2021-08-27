@@ -1,5 +1,5 @@
 import { get, toPath, kebabCase } from 'lodash';
-import * as plugins from 'tailwindcss/lib/plugins.js';
+import * as plugins from 'tailwindcss/lib/plugins';
 import transformThemeValue from 'tailwindcss/lib/util/transformThemeValue.js';
 
 import { order } from './sort';
