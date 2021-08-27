@@ -1,3 +1,4 @@
 *.svelte
 node_modules
 dist
+lib
