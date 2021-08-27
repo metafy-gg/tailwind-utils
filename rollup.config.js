@@ -1,12 +1,10 @@
 import commonjs from '@rollup/plugin-commonjs';
-import { terser } from 'rollup-plugin-terser';
-import analyze from 'rollup-plugin-analyzer';
 
 export default {
-  input: 'dist/bookmarklet.js',
-  plugins: [commonjs(), terser(), analyze()],
+  input: 'src/index.js',
+  plugins: [commonjs()],
   output: {
-    file: 'dist/bookmarklet.bundle.js',
-    format: 'iife',
+    file: 'dist/bundle/index.js',
+    format: 'cjs',
   },
 };

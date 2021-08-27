@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "build-bookmarklet": "babel src --out-dir ./dist/lib --copy-files && node bin/figma-tailwind/build.js && rollup -c",
+    "build-bookmarklet": "babel src --out-dir ./dist/lib --copy-files && node bin/figma-tailwind/build.js && rollup -c ./rollup-bookmarklet.config.js",
+    "build": "rollup -c",
     "test": "uvu -r esm test"
   },
   "repository": {
