@@ -1,6 +1,6 @@
 import { get, toPath, kebabCase } from 'lodash';
-import * as plugins from 'tailwindcss/lib/plugins';
-import transformThemeValue from 'tailwindcss/lib/util/transformThemeValue';
+import * as plugins from 'tailwindcss/lib/plugins.js';
+import transformThemeValue from 'tailwindcss/lib/util/transformThemeValue.js';
 
 import { order } from './sort';
 import { concatProperties } from './translate.js';
