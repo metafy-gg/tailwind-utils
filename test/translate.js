@@ -1,11 +1,11 @@
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
 
-import config from '../src/config';
+import { loadConfig } from '../src/config.js';
 import { classnameByProperties } from '../src/plugins.js';
 import { propertiesToClass, subsets } from '../src/translate.js';
 
-const cfg = config.load('../tailwind.config.js');
+const cfg = loadConfig('../tailwind.config.js');
 const byProperties = classnameByProperties(cfg);
 const toClass = (properties, options) => propertiesToClass(properties, byProperties, options);
 
@@ -76,7 +76,10 @@ test('hex', () => {
 });
 test('border', () => {
   const opts = { omitDefaults: true, opacityShorthand: false };
-  assert.equal(toClass('border: 1px solid rgba(121, 134, 148, 0.65)', opts), 'border border-neutrals-l40 border-opacity-65');
+  assert.equal(
+    toClass('border: 1px solid rgba(121, 134, 148, 0.65)', opts),
+    'border border-neutrals-l40 border-opacity-65'
+  );
   assert.equal(toClass('border: 1px solid rgba(121, 134, 148, 1)', opts), 'border border-neutrals-l40');
   assert.equal(toClass('border: 1px solid #262A33', opts), 'border border-neutrals-d80');
 });
@@ -95,8 +98,14 @@ test('omit defaults', () => {
   assert.equal(toClass('box-sizing: border-box'), undefined);
   assert.equal(toClass('font-style: normal'), undefined);
   assert.equal(toClass('font-style: normal', opts), 'not-italic');
-  assert.equal(toClass('border: 1px solid rgba(121, 134, 148, 1)', opts), 'border border-solid border-neutrals-l40 border-opacity-100');
-  assert.equal(toClass('border: 1px solid #262A33', opts), 'border border-solid border-neutrals-d80 border-opacity-100');
+  assert.equal(
+    toClass('border: 1px solid rgba(121, 134, 148, 1)', opts),
+    'border border-solid border-neutrals-l40 border-opacity-100'
+  );
+  assert.equal(
+    toClass('border: 1px solid #262A33', opts),
+    'border border-solid border-neutrals-d80 border-opacity-100'
+  );
 });
 test('opacity shorthand', () => {
   assert.equal(toClass('border: 1px solid rgba(121, 134, 148, 0.65)'), 'border border-neutrals-l40/65');

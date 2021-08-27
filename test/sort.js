@@ -1,13 +1,13 @@
 import { suite } from 'uvu';
 import * as assert from 'uvu/assert';
 
-import config from '../src/config';
+import { loadConfig } from '../src/config.js';
 import { orderByClassname } from '../src/plugins.js';
 import { sortClasses } from '../src/sort.js';
 
 const s = suite('sort');
 s('sorts', () => {
-  const cfg = config.load('../tailwind.config.js');
+  const cfg = loadConfig('../tailwind.config.js');
   const byClassname = orderByClassname(cfg);
   const sort = (classnames) => sortClasses(classnames, byClassname);
 

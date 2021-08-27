@@ -1,12 +1,12 @@
 import { test } from 'uvu';
 import * as assert from 'uvu/assert';
 
-import config from '../src/config';
+import { loadConfig } from '../src/config.js';
 import { propertiesByClassname } from '../src/plugins.js';
 import { responsive } from '../src/responsive.js';
 
 test('responsive', () => {
-  const cfg = config.load('../tailwind.config.js');
+  const cfg = loadConfig('../tailwind.config.js');
   const byClassname = propertiesByClassname(cfg);
   const resp = (bp, ...classnames) => responsive({ byClassname, breakpoints: [bp] }, ...classnames);
 

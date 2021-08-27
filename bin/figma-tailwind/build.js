@@ -2,10 +2,10 @@ const fs = require('fs');
 const path = require('path');
 const util = require('util');
 
-const config = require('../../dist/lib/config.js').default;
+const config = require('../../dist/lib/config.js');
 const plugins = require('../../dist/lib/plugins.js');
 
-const cfg = config.load(path.resolve('./tailwind.config.js'));
+const cfg = config.loadConfig(path.resolve('./tailwind.config.js'));
 const byProperties = plugins.classnameByProperties(cfg);
 const byClassname = plugins.propertiesByClassname(cfg);
 
