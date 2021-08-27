@@ -4,7 +4,7 @@ export default {
   input: 'src/index.js',
   plugins: [commonjs()],
   output: {
-    file: 'dist/bundle/index.js',
+    file: 'lib/index.js',
     format: 'cjs',
   },
 };
