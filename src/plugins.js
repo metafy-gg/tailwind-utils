@@ -61,7 +61,13 @@ export function classnameByProperties(cfg) {
   return byProperties;
 }
 
-export function loadPlugin(cfg, name, load) {
+export function loadPlugin(cfg, plugin, load) {
+  let name = plugin;
+  let overrides = [];
+  if (typeof plugin === 'object') {
+    name = plugin.name;
+    overrides = plugin.overrides;
+  }
   if (!(name in plugins)) {
     throw new Error(`plugin '${name}' doesn't exist`);
   }
@@ -89,7 +95,7 @@ export function loadPlugin(cfg, name, load) {
           calculatedRules[classname] = properties;
         }
       }
-      loadPluginRules(calculatedRules, load);
+      loadPluginRules(calculatedRules, overrides, load);
     },
     addUtilities: (rules) => {
       let source = rules;
@@ -105,7 +111,7 @@ export function loadPlugin(cfg, name, load) {
           source = rules[0];
         }
       }
-      loadPluginRules(source, load);
+      loadPluginRules(source, overrides, load);
     },
     theme: themeForConfig(cfg),
     variants: () => {},
@@ -116,8 +122,21 @@ export function loadPlugin(cfg, name, load) {
   });
 }
 
-function loadPluginRules(rules, load) {
-  Object.entries(rules).forEach(([classname, properties]) => {
+function loadPluginRules(rules, overrides, load) {
+  let entries = Object.entries(rules);
+
+  if (overrides.length > 0) {
+    for (const ovr of overrides) {
+      const ruleIdx = entries.findIndex(([classname]) => classname === '.' + ovr.rule);
+      const [kind, destRule] = ovr.place;
+      const destIdx = entries.findIndex(([classname]) => classname === '.' + destRule);
+      if (kind === 'before') {
+        arrayMove(entries, ruleIdx, destIdx);
+      }
+    }
+  }
+
+  entries.forEach(([classname, properties]) => {
     // `space-{}` classnames contain the full CSS selector, which is like `.space-y-150 > :not([hidden]) ~ :not([hidden])`
     // but we only want the first part, so copy everything until the first space.
     let spaceIdx = classname.indexOf(' ');
@@ -155,4 +174,14 @@ function themeForConfig(cfg) {
 
 function getConfigValue(cfg, path, defaultValue) {
   return path ? get(cfg, path, defaultValue) : cfg;
+}
+
+function arrayMove(arr, oldIndex, newIndex) {
+  if (newIndex >= arr.length) {
+    let k = newIndex - arr.length + 1;
+    while (k--) {
+      arr.push(undefined);
+    }
+  }
+  arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
 }

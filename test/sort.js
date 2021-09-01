@@ -14,5 +14,10 @@ s('sorts', () => {
   assert.equal(sort('mt-4 relative'), 'relative mt-4');
   assert.equal(sort('xl:mt-8 mt-4 relative'), 'relative mt-4 xl:mt-8');
   assert.equal(sort('space-x-8 xl:mt-8 mt-4 relative'), 'relative space-x-8 mt-4 xl:mt-8');
+  assert.equal(
+    sort('hidden lg:block text-base leading-none text-neutrals-l00 ml-6 mr-4'),
+    'hidden lg:block text-base text-neutrals-l00 leading-none mr-4 ml-6'
+  );
+  assert.equal(sort('sm:flex-row flex flex-col'), 'flex flex-col sm:flex-row');
 });
 s.run();
